@@ -13,7 +13,7 @@ public class SportLoto {
 		// third argument amount of numbers
 		// Example :java -jar sportloto 1 49 7
 		// 3,10,49,1,40,6,7
-		// Check if the correct number of arguments are provided
+	
 		
 		try {
 			if (args.length != 3) {
