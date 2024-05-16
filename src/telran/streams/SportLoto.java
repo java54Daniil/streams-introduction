@@ -1,7 +1,7 @@
 package telran.streams;
 
-import static telran.streams.StreamIntroductionMethods.*;
 
+import java.util.Random;
 public class SportLoto {
 
 	public static void main(String[] args) {
@@ -23,17 +23,19 @@ public class SportLoto {
 			int max = Integer.parseInt(args[1]);
 			int amount = Integer.parseInt(args[2]);
 
-			if (args.length!=3|| min >= max || amount <= 0 || amount > (max - min + 1)) {
+			if ( min >= max || amount <= 0 || amount > (max - min + 1)) {
 				throw new IllegalArgumentException("Invalid arguments");
 			}
 
-			int[] numbers = getRandomArray(min, max + 1, amount);
+			int[] numbers =  new Random().ints(min, max+1).distinct().limit(amount)
+					.toArray();
 			System.out.print("Sport Loto numbers: ");
-			for (int i = 0; i < amount; i++) {
-				System.out.print(numbers[i]);
-				if (i < amount - 1) {
+			for (int i = 0; i < amount && i < numbers.length; i++) {
+				
+				if (i>0) {
 					System.out.print(",");
 				}
+				System.out.print(numbers[i]);
 			}
 			System.out.println();
 

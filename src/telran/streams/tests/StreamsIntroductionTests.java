@@ -1,6 +1,6 @@
 package telran.streams.tests;
 
-import static org.junit.jupiter.api.Assertions.*; 
+import static org.junit.jupiter.api.Assertions.*;  
 import org.junit.jupiter.api.Test;
 
 import telran.streams.StreamIntroductionMethods;
