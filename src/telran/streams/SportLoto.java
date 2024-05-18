@@ -3,6 +3,7 @@ package telran.streams;
 
 import java.util.Random;
 public class SportLoto {
+	record MinMaxAmount(int min, int max, int amount) {}
 
 	public static void main(String[] args) {
 	
@@ -16,34 +17,57 @@ public class SportLoto {
 	
 		
 		try {
-			if (args.length != 3) {
-				 throw new IllegalArgumentException("Pattern to use application: <min> <max> <number of numbers>");
-			}
-			int min = Integer.parseInt(args[0]);
-			int max = Integer.parseInt(args[1]);
-			int amount = Integer.parseInt(args[2]);
-
-			if ( min >= max || amount <= 0 || amount > (max - min + 1)) {
-				throw new IllegalArgumentException("Invalid arguments");
-			}
-
-			int[] numbers =  new Random().ints(min, max+1).distinct().limit(amount)
-					.toArray();
-			System.out.print("Sport Loto numbers: ");
-			for (int i = 0; i < amount && i < numbers.length; i++) {
-				
-				if (i>0) {
-					System.out.print(",");
-				}
-				System.out.print(numbers[i]);
-			}
-			System.out.println();
-
-		} catch (NumberFormatException e) {
-			System.out.println("Invalid arguments. Please provide integers.");
+			MinMaxAmount mma = getMinMaxAmount(args);
+			checkArguments(mma);
+			displayLottoNumbers(mma);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
-		catch (IllegalArgumentException e) {
-        System.out.println(e.getMessage());
-    }
+		
 	}
+
+
+	private static void displayLottoNumbers(MinMaxAmount mma) {
+		new Random().ints(mma.min(), mma.max() + 1).distinct().limit(mma.amount())
+					.forEach(n -> System.out.print(n + " "));
+		
+	}
+
+	private static void checkArguments(MinMaxAmount mma) throws Exception{
+		int min = mma.min();
+		if (min < 0) {
+			throw new Exception("minimal number must be greater than 0");
+		}
+		int max = mma.max();
+		if (max <= min) {
+			throw new Exception("maximal number must be greater than minimal number");
+		}
+		int amount = mma.amount();
+		int rangeLength = max - min + 1;
+		if (amount < 1 || amount > rangeLength) {
+			throw new Exception(String.format("amount must be greater than 0"
+					+ " and not greater than range length %d", rangeLength));
+		}
+		
+	}
+
+	private static MinMaxAmount getMinMaxAmount(String[] args) throws Exception{
+		int min, max, amount;
+		if(args.length < 3) {
+			throw new Exception("Usage: first argument - minimal number,"
+					+ " second argument - maximal number, third argument - amount of numbers");
+		}
+		try {
+			min = Integer.parseInt(args[0]);
+			max = Integer.parseInt(args[1]);
+			amount = Integer.parseInt(args[2]);
+		} catch (NumberFormatException e) {
+			throw new Exception("all arguments must be the numbers");
+		}
+		
+		return new MinMaxAmount(min, max, amount);
+	}
+
 }
