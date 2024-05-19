@@ -2,6 +2,7 @@ package telran.streams.students;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.IntSummaryStatistics;
 
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ Colledge colledge = new Colledge(new Student[] {st1,st2,st3});
 	@Test
 	void sortTest() {
 		Student[] expected = {st1,st3,st2}; 
+		
 		assertArrayEquals(expected, sortStudents(colledge));
 	}
 	@Test
@@ -40,22 +42,24 @@ Colledge colledge = new Colledge(new Student[] {st1,st2,st3});
 		
 	}
 	private static IntSummaryStatistics geMarksStatistics(Colledge col) {
-		// TODO Auto-generated method stub
 		// returns summary statistic for marks all colledge's students
-		return null;
+		return Arrays.stream(col.students).flatMapToInt(student -> Arrays.stream(student.marks())).summaryStatistics();
 	}
 	private static IntSummaryStatistics getHoursStatistics(Colledge col) {
-		// TODO 
 		//returns IntSummaryStatistics of hours all colledges's students
-		return null;
+		return Arrays.stream(col.students)
+                .mapToInt(Student::hours)
+                .summaryStatistics();
 	}
 	private static Student[] sortStudents(Colledge col) {
-		// TODO 
+		
 		//consider getting stream from Iterable
 		//returns array of students sorted in descending order of the average marks
 		//in the case average marks are equaled there will be compare hours(more hours)
 		//one code line
-		return null;
+		return Arrays.stream(col.students).sorted((s1, s2) -> Double.compare(Arrays.stream(s2.marks()).average().orElse(0),
+				 Arrays.stream(s1.marks()).average().orElse(0)) != 0 ? Double.compare(Arrays.stream(s2.marks()).average().orElse(0), 
+					Arrays.stream(s1.marks()).average().orElse(0)) : Integer.compare(s2.hours(), s1.hours())).toArray(Student[]::new);
 	}
 	
 }

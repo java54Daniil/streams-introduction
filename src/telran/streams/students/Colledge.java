@@ -2,6 +2,7 @@ package telran.streams.students;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Colledge implements Iterable<Student> {
 	Student[] students;
@@ -9,17 +10,19 @@ public class Colledge implements Iterable<Student> {
 		this.students = Arrays.copyOf(students, students.length);
 	}
 	private class ColledgeIterator implements Iterator<Student>  {
-
+		private int index = 0;
 		@Override
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
+
+			return index < students.length;
 		}
 
 		@Override
 		public Student next() {
-			// TODO Auto-generated method stub
-			return null;
+			 if (!hasNext()) {
+	                throw new NoSuchElementException("No more students available.");
+	            }
+			return students[index++];
 		}
 		
 	}
