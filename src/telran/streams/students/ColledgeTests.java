@@ -3,7 +3,9 @@ package telran.streams.students;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.IntSummaryStatistics;
+import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
 
@@ -57,9 +59,10 @@ Colledge colledge = new Colledge(new Student[] {st1,st2,st3});
 		//returns array of students sorted in descending order of the average marks
 		//in the case average marks are equaled there will be compare hours(more hours)
 		//one code line
-		return Arrays.stream(col.students).sorted((s1, s2) -> Double.compare(Arrays.stream(s2.marks()).average().orElse(0),
-				 Arrays.stream(s1.marks()).average().orElse(0)) != 0 ? Double.compare(Arrays.stream(s2.marks()).average().orElse(0), 
-					Arrays.stream(s1.marks()).average().orElse(0)) : Integer.compare(s2.hours(), s1.hours())).toArray(Student[]::new);
+		return  StreamSupport.stream(col.spliterator(), false)
+				.sorted(Comparator.comparingDouble((Student s) -> Arrays.stream(s.marks())
+						.average().orElseThrow()
+						).thenComparingInt(s -> s.hours()).reversed()).toArray(Student[]::new);
 	}
 	
 }
